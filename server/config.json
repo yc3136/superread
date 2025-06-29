@@ -1,0 +1,9 @@
+{
+    "rds_host": "test-database.ckrmcxp3mufx.us-east-2.rds.amazonaws.com",
+    "rds_port": "3306",
+    "rds_user": "admin",
+    "rds_password" : "550teama+",
+    "rds_db": "GoodreadD1",
+    "server_host": "127.0.0.1",
+    "server_port":"8080"
+}

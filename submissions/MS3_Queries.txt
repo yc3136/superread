@@ -1,0 +1,107 @@
+#### Database Credential ####
+# host: test-database.ckrmcxp3mufx.us-east-2.rds.amazonaws.com
+# user: admin
+# password: 550teama+
+
+
+#### Home Page ####
+# 1. Showcase top 5 books:
+SELECT book_id, title
+FROM Books
+ORDER BY average_rating DESC
+LIMIT 5;
+
+# 2. Showcase top 5 authors:
+SELECT authorId, name
+FROM Authors
+ORDER BY average_rate DESC
+LIMIT 5;
+
+# 3. Search by book:
+# param: book_name
+SELECT book_id, title, image_url, authors, average_rating
+FROM Books
+WHERE title LIKE '%${book_name}%'
+ORDER BY average_rating DESC;
+
+# 4. Search by author:
+# param: author_name
+SELECT authorId, name, image_url, average_rate
+FROM Authors
+WHERE name LIKE '%${author_name}%'
+ORDER BY average_rate DESC;
+
+
+#### Book Page ####
+# 1. Book’s basic info:
+# param: book_id
+SELECT isbn,
+       country_code,
+       language_code,
+       is_ebook,
+       average_rating,
+       description,
+       format,
+       link,
+       publisher,
+       num_pages,
+       publication_year,
+       url,
+       Books.image_url,
+       title,
+       Authors.name
+FROM Books
+         LEFT JOIN Authors
+                   ON Books.authors = Authors.authorId
+WHERE book_id = '${book_id}';
+
+# 2. Top review:
+# param: book_id
+SELECT Reviews.rating, Reviews.review_text, Reviews.date_added
+FROM Books
+         JOIN Reviews ON Books.book_id = Reviews.book_id
+WHERE Books.book_id = '${book_id}'
+ORDER BY Reviews.n_votes DESC
+LIMIT 10;
+
+
+
+#### Author Page ####
+# 1. Basic info of author:
+# param: author_id
+SELECT name,
+       workcount,
+       fan_count,
+       gender,
+       image_url,
+       about,
+       born,
+       died,
+       average_rate,
+       genre,
+       original_hometown,
+       country
+FROM Authors
+WHERE authorId = '${author_id}';
+
+# 2. Top ten popular books by author:
+# param: author_id
+SELECT Books.book_id, Books.title, COUNT(Interactions.user_id) AS peopleRead
+FROM Authors
+         JOIN Books ON Authors.authorId = Books.authors
+         LEFT JOIN Interactions ON Interactions.book_id = Books.book_id
+WHERE Authors.authorId = '${author_id}'
+  AND Interactions.is_read = 'True'
+GROUP BY Books.title
+ORDER BY COUNT(Interactions.user_id) DESC
+LIMIT 10;
+
+
+
+#### BookCatalog Page ####
+# 1. list all books entries
+SELECT image_url, title, authors
+FROM Books;
+
+
+
